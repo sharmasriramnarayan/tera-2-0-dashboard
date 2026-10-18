@@ -167,6 +167,73 @@ st.plotly_chart(fig, use_container_width=True)
 st.subheader("Zone assessment")
 st.dataframe(df, hide_index=True, use_container_width=True)
 
+st.subheader("Risk simulator")
+
+selected_zone = st.selectbox(
+    "Choose a zone to simulate",
+    list(zones.keys())
+)
+
+st.write("Adjust the five factors to explore a hypothetical scenario.")
+
+factor_names = [
+    "Hazard severity",
+    "Vulnerability",
+    "Population impact",
+    "Ecological value",
+    "Urgency"
+]
+
+default_values = zones[selected_zone]
+new_values = []
+
+for name, default in zip(factor_names, default_values):
+    value = st.slider(
+        name,
+        min_value=0,
+        max_value=100,
+        value=int(default)
+    )
+    new_values.append(value)
+
+new_score = calculate_risk(new_values)
+
+st.metric(
+    "Simulated risk-priority index",
+    f"{new_score:.1f} / 100",
+    classify_risk(new_score)
+)
+
+st.write(
+    "This result reflects the selected inputs and the scoring "
+    "formula. It does not predict the probability of a real disaster."
+)
+
+contributions = pd.DataFrame({
+    "Factor": factor_names,
+    "Contribution": [
+        value * weight
+        for value, weight in zip(new_values, weights)
+    ]
+})
+
+st.bar_chart(
+    contributions.set_index("Factor")
+)
+
+st.subheader("Response planning concept")
+
+actions = {
+    "Forest": "Review forest-fire alerts and protect safe evacuation routes.",
+    "Residential Area": "Review flood alerts and identify safe routes.",
+    "Hospital": "Review backup-power readiness and continuity plans.",
+    "Smart Farm": "Review water availability and irrigation efficiency.",
+    "River & Dam": "Monitor official water-level advisories.",
+    "Industrial Zone": "Follow facility safety procedures and contact authorised responders."
+}
+
+st.info(actions[selected_zone])
+
 st.caption(
     "TERA is an educational risk-prioritisation prototype. "
     "The built-in values are illustrative, not live sensor data "
