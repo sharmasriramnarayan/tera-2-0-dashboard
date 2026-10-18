@@ -112,130 +112,216 @@ df = pd.DataFrame(rows).sort_values(
     "Risk score", ascending=False
 )
 
-st.write("")
+# CREATE THE FOUR DASHBOARD TABS
+tab1, tab2, tab3, tab4 = st.tabs([
+    "◈ Command Centre",
+    "⌁ Risk Simulator",
+    "◎ Response Planner",
+    "✳ Methodology & AI"
+])
 
-a, b, c = st.columns(3)
+# TAB 1: COMMAND CENTRE
+with tab1:
+    st.subheader("Environmental Priority Ranking")
 
-with a:
-    st.markdown(
-        '<div class="metric"><div class="metric-label">'
-        'Zones assessed</div><div class="metric-value">06</div></div>',
-        unsafe_allow_html=True
+    a, b, c = st.columns(3)
+
+    with a:
+        st.metric("Zones Assessed", "06")
+
+    with b:
+        st.metric("Top Priority", df.iloc[0]["Zone"])
+
+    with c:
+        st.metric(
+            "Highest Score",
+            f'{df.iloc[0]["Risk score"]:.1f}'
+        )
+
+    fig = px.bar(
+        df.sort_values("Risk score"),
+        x="Risk score",
+        y="Zone",
+        orientation="h",
+        color="Risk score",
+        color_continuous_scale=[
+            "#7cf7c5", "#f3df78",
+            "#ff9b70", "#ff6474"
+        ],
+        range_color=(0, 100)
     )
 
-with b:
-    st.markdown(
-        f'<div class="metric"><div class="metric-label">'
-        f'Top priority</div><div class="metric-value" '
-        f'style="font-size:22px">{df.iloc[0]["Zone"]}</div></div>',
-        unsafe_allow_html=True
+    fig.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="#effcf6",
+        coloraxis_showscale=False,
+        xaxis_title="Risk-priority index",
+        yaxis_title="",
+        margin=dict(l=10, r=10, t=20, b=10)
     )
 
-with c:
-    st.markdown(
-        f'<div class="metric"><div class="metric-label">'
-        f'Highest score</div><div class="metric-value">'
-        f'{df.iloc[0]["Risk score"]:.1f}</div></div>',
-        unsafe_allow_html=True
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.subheader("Zone Assessment")
+    st.dataframe(
+        df,
+        hide_index=True,
+        use_container_width=True
     )
 
-st.subheader("Environmental priority ranking")
 
-fig = px.bar(
-    df.sort_values("Risk score"),
-    x="Risk score",
-    y="Zone",
-    orientation="h",
-    color="Risk score",
-    color_continuous_scale=["#7cf7c5", "#f3df78", "#ff9b70", "#ff6474"],
-    range_color=(0, 100)
-)
+# TAB 2: RISK SIMULATOR
+with tab2:
+    st.subheader("Test a Hypothetical Scenario")
 
-fig.update_layout(
-    template="plotly_dark",
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font_color="#effcf6",
-    coloraxis_showscale=False,
-    xaxis_title="Risk-priority index",
-    yaxis_title="",
-    margin=dict(l=10, r=10, t=20, b=10)
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-st.subheader("Zone assessment")
-st.dataframe(df, hide_index=True, use_container_width=True)
-
-st.subheader("Risk simulator")
-
-selected_zone = st.selectbox(
-    "Choose a zone to simulate",
-    list(zones.keys())
-)
-
-st.write("Adjust the five factors to explore a hypothetical scenario.")
-
-factor_names = [
-    "Hazard severity",
-    "Vulnerability",
-    "Population impact",
-    "Ecological value",
-    "Urgency"
-]
-
-default_values = zones[selected_zone]
-new_values = []
-
-for name, default in zip(factor_names, default_values):
-    value = st.slider(
-        name,
-        min_value=0,
-        max_value=100,
-        value=int(default)
+    selected_zone = st.selectbox(
+        "Choose a zone to simulate",
+        list(zones.keys()),
+        key="simulator_zone"
     )
-    new_values.append(value)
 
-new_score = calculate_risk(new_values)
+    st.write(
+        "Adjust the five factors to see how "
+        "the risk-priority score changes."
+    )
 
-st.metric(
-    "Simulated risk-priority index",
-    f"{new_score:.1f} / 100",
-    classify_risk(new_score)
-)
-
-st.write(
-    "This result reflects the selected inputs and the scoring "
-    "formula. It does not predict the probability of a real disaster."
-)
-
-contributions = pd.DataFrame({
-    "Factor": factor_names,
-    "Contribution": [
-        value * weight
-        for value, weight in zip(new_values, weights)
+    factor_names = [
+        "Hazard severity",
+        "Vulnerability",
+        "Population impact",
+        "Ecological value",
+        "Urgency"
     ]
-})
 
-st.bar_chart(
-    contributions.set_index("Factor")
-)
+    default_values = zones[selected_zone]
+    new_values = []
 
-st.subheader("Response planning concept")
+    for name, default in zip(factor_names, default_values):
+        value = st.slider(
+            name,
+            min_value=0,
+            max_value=100,
+            value=int(default),
+            key=f"sim_{selected_zone}_{name}"
+        )
+        new_values.append(value)
 
-actions = {
-    "Forest": "Review forest-fire alerts and protect safe evacuation routes.",
-    "Residential Area": "Review flood alerts and identify safe routes.",
-    "Hospital": "Review backup-power readiness and continuity plans.",
-    "Smart Farm": "Review water availability and irrigation efficiency.",
-    "River & Dam": "Monitor official water-level advisories.",
-    "Industrial Zone": "Follow facility safety procedures and contact authorised responders."
-}
+    new_score = calculate_risk(new_values)
 
-st.info(actions[selected_zone])
+    st.metric(
+        "Simulated Risk-Priority Index",
+        f"{new_score:.1f} / 100",
+        classify_risk(new_score)
+    )
 
-st.caption(
-    "TERA is an educational risk-prioritisation prototype. "
-    "The built-in values are illustrative, not live sensor data "
-    "or calibrated disaster probabilities."
-)
+    st.caption(
+        "This score reflects your selected inputs. "
+        "It is not a prediction of the probability "
+        "of a real disaster."
+    )
+
+    contributions = pd.DataFrame({
+        "Factor": factor_names,
+        "Contribution": [
+            value * weight
+            for value, weight in zip(new_values, weights)
+        ]
+    })
+
+    st.subheader("Factor Contributions")
+    st.bar_chart(
+        contributions.set_index("Factor")
+    )
+
+
+# TAB 3: RESPONSE PLANNER
+with tab3:
+    st.subheader("Response Planning Concept")
+
+    response_zone = st.selectbox(
+        "Select a zone",
+        list(zones.keys()),
+        key="response_zone"
+    )
+
+    actions = {
+        "Forest": (
+            "Review forest-fire alerts and protect "
+            "safe evacuation routes."
+        ),
+        "Residential Area": (
+            "Review flood alerts and identify safe routes."
+        ),
+        "Hospital": (
+            "Review backup-power readiness and "
+            "continuity plans."
+        ),
+        "Smart Farm": (
+            "Review water availability and "
+            "irrigation efficiency."
+        ),
+        "River & Dam": (
+            "Monitor official water-level advisories."
+        ),
+        "Industrial Zone": (
+            "Follow facility safety procedures and "
+            "contact authorised responders."
+        )
+    }
+
+    st.info(actions[response_zone])
+
+    st.subheader("Zone Priority")
+    zone_score = calculate_risk(zones[response_zone])
+
+    st.metric(
+        f"{response_zone} Risk-Priority Index",
+        f"{zone_score:.1f} / 100",
+        classify_risk(zone_score)
+    )
+
+
+# TAB 4: METHODOLOGY & AI
+with tab4:
+    st.subheader("How TERA Calculates Risk")
+
+    st.write(
+        "TERA combines five illustrative factors "
+        "into a weighted risk-priority index."
+    )
+
+    st.latex(
+        r"R = 0.30H + 0.25V + 0.20P + 0.15E + 0.10U"
+    )
+
+    st.markdown("""
+    **Factor weights**
+
+    - Hazard Severity (H): 30%
+    - Vulnerability (V): 25%
+    - Population Impact (P): 20%
+    - Ecological Value (E): 15%
+    - Urgency (U): 10%
+    """)
+
+    st.subheader("Priority Thresholds")
+
+    st.markdown("""
+    - **CRITICAL:** 80–100
+    - **HIGH:** 65–79.99
+    - **MODERATE:** 45–64.99
+    - **LOWER:** Below 45
+    """)
+
+    st.subheader("Scientific Limitations")
+
+    st.write(
+        "TERA is an educational risk-prioritisation "
+        "prototype. Its built-in values are illustrative, "
+        "not live sensor readings. The score is not a "
+        "calibrated disaster probability or a validated "
+        "real-world forecast. Response decisions should "
+        "follow official advisories and authorised agencies."
+    )
