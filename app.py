@@ -2,10 +2,10 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 
 # ============================================================
 # TERA 2.0 — ENVIRONMENTAL INTELLIGENCE DASHBOARD
+# Larger typography | Dark forest theme | Judge-friendly layout
 # ============================================================
 
 st.set_page_config(
@@ -15,364 +15,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# -------------------- DARK FOREST THEME ---------------------
+# -------------------- THEME --------------------
 
 BG = "#101713"
 PANEL = "#18221C"
 PANEL_ALT = "#202D25"
 BORDER = "#35463A"
 TEXT = "#E5E9DF"
-MUTED = "#A8B5A6"
-ACCENT = "#A6C4A8"
-GREEN = "#8FAF95"
-AMBER = "#C8AD78"
-RED = "#C98580"
-LOW = "#769B7A"
-
-PLOT_BG = PANEL
-GRID = "#2B392F"
-
-# -------------------- GLOBAL CSS -----------------------------
-
-st.markdown(
-    f"""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-
-    :root {{
-        color-scheme: dark;
-    }}
-
-    html, body, [class*="css"], [data-testid="stAppViewContainer"] {{
-        font-family: 'Manrope', sans-serif;
-    }}
-
-    .stApp {{
-        background: {BG};
-        color: {TEXT};
-    }}
-
-    [data-testid="stHeader"] {{
-        background: {BG};
-    }}
-
-    [data-testid="stAppViewContainer"] > .main {{
-        background: {BG};
-    }}
-
-    .block-container {{
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
-        max-width: 1500px;
-    }}
-
-    h1, h2, h3, h4, p, label, li {{
-        color: {TEXT};
-    }}
-
-    h1 {{
-        letter-spacing: -1.3px;
-        font-weight: 800;
-    }}
-
-    h2, h3 {{
-        letter-spacing: -0.4px;
-        font-weight: 700;
-    }}
-
-    [data-testid="stCaptionContainer"] p,
-    .muted {{
-        color: {MUTED} !important;
-    }}
-
-    hr {{
-        border-color: {BORDER};
-    }}
-
-    /* Hero section */
-
-    .hero {{
-        background: linear-gradient(120deg, #1D2A21, #17221B 70%, #202D25);
-        border: 1px solid {BORDER};
-        border-radius: 20px;
-        padding: 25px 28px;
-        margin-bottom: 20px;
-    }}
-
-    .eyebrow {{
-        color: {ACCENT};
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 9px;
-    }}
-
-    .hero-title {{
-        font-size: clamp(28px, 4vw, 43px);
-        line-height: 1.13;
-        font-weight: 800;
-        color: {TEXT};
-        margin: 0 0 10px 0;
-    }}
-
-    .hero-subtitle {{
-        color: {MUTED};
-        font-size: 14px;
-        line-height: 1.7;
-        margin: 0;
-        max-width: 850px;
-    }}
-
-    /* Metric cards */
-
-    .metric-card {{
-        background: {PANEL};
-        border: 1px solid {BORDER};
-        border-radius: 15px;
-        padding: 17px 18px;
-        min-height: 118px;
-    }}
-
-    .metric-label {{
-        color: {MUTED};
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }}
-
-    .metric-value {{
-        color: {TEXT};
-        font-size: 30px;
-        font-weight: 800;
-        line-height: 1.5;
-    }}
-
-    .metric-note {{
-        color: {MUTED};
-        font-size: 11px;
-    }}
-
-    /* Information panels */
-
-    .panel {{
-        background: {PANEL};
-        border: 1px solid {BORDER};
-        border-radius: 15px;
-        padding: 18px;
-        margin-bottom: 12px;
-    }}
-
-    .panel-title {{
-        color: {TEXT};
-        font-weight: 800;
-        font-size: 15px;
-        margin-bottom: 7px;
-    }}
-
-    .panel-text {{
-        color: {MUTED};
-        font-size: 13px;
-        line-height: 1.7;
-    }}
-
-    .priority-pill {{
-        display: inline-block;
-        padding: 5px 11px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.4px;
-        border: 1px solid {BORDER};
-    }}
-
-    .critical {{
-        color: {RED};
-        background: #30201F;
-    }}
-
-    .high {{
-        color: {AMBER};
-        background: #30291D;
-    }}
-
-    .moderate {{
-        color: {ACCENT};
-        background: #202C24;
-    }}
-
-    .lower {{
-        color: {GREEN};
-        background: #1D2A20;
-    }}
-
-    /* Tabs */
-
-    [data-testid="stTabs"] {{
-        margin-top: 10px;
-    }}
-
-    [data-testid="stTabs"] button {{
-        color: {MUTED} !important;
-        font-weight: 700 !important;
-        border-radius: 9px 9px 0 0;
-    }}
-
-    [data-testid="stTabs"] button[aria-selected="true"] {{
-        color: {ACCENT} !important;
-        border-bottom-color: {ACCENT} !important;
-    }}
-
-    [data-testid="stTabContent"] {{
-        padding-top: 18px;
-    }}
-
-    /* Inputs */
-
-    [data-testid="stSelectbox"] label,
-    [data-testid="stSlider"] label {{
-        color: {TEXT} !important;
-        font-weight: 600;
-    }}
-
-    [data-testid="stSelectbox"] div[data-baseweb="select"] > div {{
-        background-color: {PANEL_ALT} !important;
-        color: {TEXT} !important;
-        border-color: {BORDER} !important;
-        border-radius: 10px !important;
-    }}
-
-    [data-baseweb="popover"],
-    [data-baseweb="menu"] {{
-        background-color: {PANEL_ALT} !important;
-    }}
-
-    [role="option"] {{
-        background-color: {PANEL_ALT} !important;
-        color: {TEXT} !important;
-    }}
-
-    [role="option"]:hover {{
-        background-color: #304236 !important;
-    }}
-
-    [data-testid="stSlider"] [data-baseweb="slider"] {{
-        color: {ACCENT};
-    }}
-
-    [data-testid="stSlider"] [role="slider"] {{
-        background-color: {ACCENT} !important;
-        border-color: {ACCENT} !important;
-    }}
-
-    /* Buttons */
-
-    .stButton > button {{
-        background: {PANEL_ALT};
-        color: {TEXT};
-        border: 1px solid {BORDER};
-        border-radius: 10px;
-        font-weight: 700;
-    }}
-
-    .stButton > button:hover {{
-        background: #2A3B30;
-        color: {TEXT};
-        border-color: {ACCENT};
-    }}
-
-    /* Dark static tables */
-
-    [data-testid="stTable"] {{
-        background: {PANEL} !important;
-        border: 1px solid {BORDER} !important;
-        border-radius: 12px !important;
-        overflow: hidden;
-    }}
-
-    [data-testid="stTable"] table {{
-        background: {PANEL} !important;
-        color: {TEXT} !important;
-        border-collapse: collapse !important;
-        width: 100%;
-    }}
-
-    [data-testid="stTable"] thead tr th {{
-        background: #26362B !important;
-        color: {ACCENT} !important;
-        border-bottom: 1px solid {BORDER} !important;
-        padding: 11px !important;
-        font-size: 12px !important;
-    }}
-
-    [data-testid="stTable"] tbody tr td {{
-        background: {PANEL} !important;
-        color: {TEXT} !important;
-        border-bottom: 1px solid #2B392F !important;
-        padding: 10px !important;
-        font-size: 12px !important;
-    }}
-
-    [data-testid="stTable"] tbody tr:nth-child(even) td {{
-        background: #1B271F !important;
-    }}
-
-    /* Keep the interactive data grid dark too */
-
-    [data-testid="stDataFrame"] {{
-        background: {PANEL} !important;
-        border: 1px solid {BORDER} !important;
-        border-radius: 12px !important;
-        overflow: hidden !important;
-    }}
-
-    [data-testid="stDataFrame"] iframe {{
-        background: {PANEL} !important;
-        color-scheme: dark;
-    }}
-
-    [data-testid="stDataFrame"] [role="grid"] {{
-        background: {PANEL} !important;
-        color: {TEXT} !important;
-    }}
-
-    /* Alerts and expanders */
-
-    [data-testid="stAlert"] {{
-        background: {PANEL_ALT} !important;
-        border: 1px solid {BORDER} !important;
-        border-radius: 12px !important;
-        color: {TEXT} !important;
-    }}
-
-    [data-testid="stExpander"] {{
-        background: {PANEL} !important;
-        border: 1px solid {BORDER} !important;
-        border-radius: 12px !important;
-    }}
-
-    [data-testid="stExpander"] summary {{
-        color: {TEXT} !important;
-    }}
-
-    /* Footer */
-
-    .footer {{
-        color: {MUTED};
-        text-align: center;
-        font-size: 11px;
-        padding: 20px 0 4px 0;
-        border-top: 1px solid {BORDER};
-        margin-top: 25px;
-    }}
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# -------------------- PROJECT DATA --------------------------
+MUTED = "#B8C4B5"
+ACCENT = "#B6D2B8"
+GREEN = "#91B69A"
+AMBER = "#E0BD7D"
+RED = "#D9948E"
+LOW = "#8DBA91"
+GRID = "#344338"
 
 FACTORS = ["Hazard", "Vulnerability", "Population", "Exposure", "Urgency"]
 
@@ -432,7 +88,401 @@ ACTIONS = {
     ],
 }
 
-# -------------------- CALCULATION FUNCTIONS -----------------
+# -------------------- LARGE, DARK CSS --------------------
+
+st.markdown(
+    f"""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root {{
+        color-scheme: dark;
+    }}
+
+    html, body, [class*="css"] {{
+        font-family: 'Manrope', sans-serif;
+        font-size: 18px;
+    }}
+
+    .stApp,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"],
+    [data-testid="stHeader"] {{
+        background-color: {BG} !important;
+        color: {TEXT} !important;
+    }}
+
+    .block-container {{
+        max-width: 1600px;
+        padding-top: 1.8rem;
+        padding-bottom: 2.5rem;
+    }}
+
+    /* Global readable typography */
+
+    p, li, label, .stMarkdown, .stText, .stCaption {{
+        color: {TEXT};
+    }}
+
+    p {{
+        font-size: 17px;
+        line-height: 1.75;
+    }}
+
+    h1 {{
+        color: {TEXT} !important;
+        font-size: 42px !important;
+        font-weight: 800 !important;
+        letter-spacing: -1px;
+    }}
+
+    h2 {{
+        color: {TEXT} !important;
+        font-size: 32px !important;
+        font-weight: 800 !important;
+    }}
+
+    h3 {{
+        color: {TEXT} !important;
+        font-size: 25px !important;
+        font-weight: 800 !important;
+    }}
+
+    h4 {{
+        color: {TEXT} !important;
+        font-size: 21px !important;
+        font-weight: 700 !important;
+    }}
+
+    [data-testid="stCaptionContainer"] p {{
+        color: {MUTED} !important;
+        font-size: 15px !important;
+        line-height: 1.65;
+    }}
+
+    [data-testid="stMarkdownContainer"] p {{
+        line-height: 1.7;
+    }}
+
+    hr {{
+        border-color: {BORDER} !important;
+    }}
+
+    /* Hero */
+
+    .hero {{
+        background: linear-gradient(120deg, #1D2A21, #17221B 70%, #202D25);
+        border: 1px solid {BORDER};
+        border-radius: 22px;
+        padding: 32px 34px;
+        margin-bottom: 26px;
+    }}
+
+    .eyebrow {{
+        color: {ACCENT};
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }}
+
+    .hero-title {{
+        font-size: clamp(36px, 4.5vw, 58px);
+        line-height: 1.12;
+        font-weight: 800;
+        color: {TEXT};
+        letter-spacing: -1.5px;
+        margin: 0 0 16px 0;
+    }}
+
+    .hero-subtitle {{
+        color: {MUTED};
+        font-size: 18px;
+        line-height: 1.8;
+        margin: 0;
+        max-width: 1000px;
+    }}
+
+    /* Metric cards */
+
+    .metric-card {{
+        background: {PANEL};
+        border: 1px solid {BORDER};
+        border-radius: 17px;
+        padding: 22px;
+        min-height: 145px;
+    }}
+
+    .metric-label {{
+        color: {MUTED};
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+        line-height: 1.5;
+    }}
+
+    .metric-value {{
+        color: {TEXT};
+        font-size: 39px;
+        font-weight: 800;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+    }}
+
+    .metric-note {{
+        color: {MUTED};
+        font-size: 14px;
+        line-height: 1.5;
+    }}
+
+    /* Content panels */
+
+    .panel {{
+        background: {PANEL};
+        border: 1px solid {BORDER};
+        border-radius: 16px;
+        padding: 21px;
+        margin-bottom: 14px;
+    }}
+
+    .panel-title {{
+        color: {TEXT};
+        font-weight: 800;
+        font-size: 20px;
+        line-height: 1.5;
+        margin-bottom: 9px;
+    }}
+
+    .panel-text {{
+        color: {MUTED};
+        font-size: 16px;
+        line-height: 1.8;
+    }}
+
+    .priority-pill {{
+        display: inline-block;
+        padding: 8px 14px;
+        border-radius: 22px;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        border: 1px solid {BORDER};
+    }}
+
+    .critical {{
+        color: {RED};
+        background: #30201F;
+    }}
+
+    .high {{
+        color: {AMBER};
+        background: #30291D;
+    }}
+
+    .moderate {{
+        color: {ACCENT};
+        background: #202C24;
+    }}
+
+    .lower {{
+        color: {GREEN};
+        background: #1D2A20;
+    }}
+
+    /* Tabs */
+
+    [data-testid="stTabs"] {{
+        margin-top: 15px;
+    }}
+
+    [data-testid="stTabs"] button {{
+        color: {MUTED} !important;
+        font-size: 17px !important;
+        font-weight: 800 !important;
+        padding: 15px 12px !important;
+    }}
+
+    [data-testid="stTabs"] button[aria-selected="true"] {{
+        color: {ACCENT} !important;
+        border-bottom-color: {ACCENT} !important;
+    }}
+
+    [data-testid="stTabContent"] {{
+        padding-top: 24px;
+    }}
+
+    /* Selectboxes */
+
+    [data-testid="stSelectbox"] label {{
+        color: {TEXT} !important;
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        margin-bottom: 8px;
+    }}
+
+    [data-testid="stSelectbox"] div[data-baseweb="select"] > div {{
+        background-color: {PANEL_ALT} !important;
+        color: {TEXT} !important;
+        border-color: {BORDER} !important;
+        border-radius: 11px !important;
+        min-height: 50px;
+        font-size: 16px !important;
+    }}
+
+    [data-baseweb="popover"],
+    [data-baseweb="menu"] {{
+        background-color: {PANEL_ALT} !important;
+    }}
+
+    [role="option"] {{
+        background-color: {PANEL_ALT} !important;
+        color: {TEXT} !important;
+        font-size: 16px !important;
+    }}
+
+    [role="option"]:hover {{
+        background-color: #304236 !important;
+    }}
+
+    /* Sliders */
+
+    [data-testid="stSlider"] label {{
+        color: {TEXT} !important;
+        font-size: 17px !important;
+        font-weight: 700 !important;
+    }}
+
+    [data-testid="stSlider"] [data-testid="stMarkdownContainer"] p {{
+        font-size: 15px !important;
+    }}
+
+    [data-testid="stSlider"] [role="slider"] {{
+        background-color: {ACCENT} !important;
+        border-color: {ACCENT} !important;
+    }}
+
+    /* Buttons */
+
+    .stButton > button {{
+        background: {PANEL_ALT};
+        color: {TEXT};
+        border: 1px solid {BORDER};
+        border-radius: 11px;
+        font-size: 16px;
+        font-weight: 800;
+        padding: 10px 18px;
+    }}
+
+    .stButton > button:hover {{
+        background: #2A3B30;
+        color: {TEXT};
+        border-color: {ACCENT};
+    }}
+
+    /* Dark static tables */
+
+    [data-testid="stTable"] {{
+        background: {PANEL} !important;
+        border: 1px solid {BORDER} !important;
+        border-radius: 13px !important;
+        overflow: hidden;
+    }}
+
+    [data-testid="stTable"] table {{
+        background: {PANEL} !important;
+        color: {TEXT} !important;
+        border-collapse: collapse !important;
+        width: 100%;
+    }}
+
+    [data-testid="stTable"] thead tr th {{
+        background: #26362B !important;
+        color: {ACCENT} !important;
+        border-bottom: 1px solid {BORDER} !important;
+        padding: 15px 13px !important;
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        white-space: normal !important;
+    }}
+
+    [data-testid="stTable"] tbody tr td {{
+        background: {PANEL} !important;
+        color: {TEXT} !important;
+        border-bottom: 1px solid #2B392F !important;
+        padding: 14px 13px !important;
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+        white-space: normal !important;
+    }}
+
+    [data-testid="stTable"] tbody tr:nth-child(even) td {{
+        background: #1B271F !important;
+    }}
+
+    /* Data grid fallback */
+
+    [data-testid="stDataFrame"] {{
+        background: {PANEL} !important;
+        border: 1px solid {BORDER} !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }}
+
+    [data-testid="stDataFrame"] iframe {{
+        background: {PANEL} !important;
+        color-scheme: dark;
+    }}
+
+    /* Alerts and expanders */
+
+    [data-testid="stAlert"] {{
+        background: {PANEL_ALT} !important;
+        border: 1px solid {BORDER} !important;
+        border-radius: 12px !important;
+        color: {TEXT} !important;
+        font-size: 16px !important;
+    }}
+
+    [data-testid="stExpander"] {{
+        background: {PANEL} !important;
+        border: 1px solid {BORDER} !important;
+        border-radius: 12px !important;
+    }}
+
+    [data-testid="stExpander"] summary {{
+        color: {TEXT} !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+    }}
+
+    /* Formula */
+
+    [data-testid="stLatex"] {{
+        color: {TEXT} !important;
+        font-size: 23px !important;
+        overflow-x: auto;
+    }}
+
+    /* Footer */
+
+    .footer {{
+        color: {MUTED};
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.8;
+        padding: 24px 0 6px 0;
+        border-top: 1px solid {BORDER};
+        margin-top: 30px;
+    }}
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# -------------------- CALCULATION FUNCTIONS --------------------
 
 def calculate_risk(values):
     return round(
@@ -444,9 +494,9 @@ def calculate_risk(values):
 def classify_risk(score):
     if score >= 80:
         return "Critical"
-    elif score >= 65:
+    if score >= 65:
         return "High"
-    elif score >= 45:
+    if score >= 45:
         return "Moderate"
     return "Lower"
 
@@ -473,11 +523,10 @@ def build_dataframe():
     rows = []
 
     for zone, values in ZONES.items():
-        score = calculate_risk(values)
         rows.append({
             "Zone": zone,
-            "Risk Score": score,
-            "Priority": classify_risk(score),
+            "Risk Score": calculate_risk(values),
+            "Priority": classify_risk(calculate_risk(values)),
             "Hazard": values[0],
             "Vulnerability": values[1],
             "Population": values[2],
@@ -488,42 +537,6 @@ def build_dataframe():
     return pd.DataFrame(rows).sort_values(
         "Risk Score", ascending=False
     ).reset_index(drop=True)
-
-
-def make_plot_layout(fig, height=350):
-    fig.update_layout(
-        height=height,
-        paper_bgcolor=PLOT_BG,
-        plot_bgcolor=PLOT_BG,
-        font=dict(
-            family="Manrope, sans-serif",
-            color=TEXT,
-            size=11
-        ),
-        margin=dict(l=12, r=12, t=35, b=12),
-        xaxis=dict(
-            gridcolor=GRID,
-            zerolinecolor=GRID,
-            tickfont=dict(color=MUTED),
-            title_font=dict(color=MUTED),
-        ),
-        yaxis=dict(
-            gridcolor=GRID,
-            zerolinecolor=GRID,
-            tickfont=dict(color=MUTED),
-            title_font=dict(color=MUTED),
-        ),
-        legend=dict(
-            font=dict(color=TEXT),
-            bgcolor="rgba(0,0,0,0)"
-        ),
-        hoverlabel=dict(
-            bgcolor=PANEL_ALT,
-            font_color=TEXT,
-            bordercolor=BORDER
-        ),
-    )
-    return fig
 
 
 def metric_card(label, value, note):
@@ -540,14 +553,51 @@ def metric_card(label, value, note):
 
 
 def show_priority(priority):
-    css_class = priority_class(priority)
     st.markdown(
-        f'<span class="priority-pill {css_class}">{priority.upper()} PRIORITY</span>',
+        f'<span class="priority-pill {priority_class(priority)}">'
+        f'{priority.upper()} PRIORITY</span>',
         unsafe_allow_html=True
     )
 
 
-# -------------------- HEADER --------------------------------
+def make_plot_layout(fig, height=380):
+    fig.update_layout(
+        height=height,
+        paper_bgcolor=PANEL,
+        plot_bgcolor=PANEL,
+        font=dict(
+            family="Manrope, sans-serif",
+            color=TEXT,
+            size=14
+        ),
+        margin=dict(l=15, r=45, t=35, b=20),
+        xaxis=dict(
+            gridcolor=GRID,
+            zerolinecolor=GRID,
+            tickfont=dict(color=MUTED, size=13),
+            title_font=dict(color=MUTED, size=14),
+        ),
+        yaxis=dict(
+            gridcolor=GRID,
+            zerolinecolor=GRID,
+            tickfont=dict(color=TEXT, size=13),
+            title_font=dict(color=MUTED, size=14),
+        ),
+        legend=dict(
+            font=dict(color=TEXT, size=13),
+            bgcolor="rgba(0,0,0,0)"
+        ),
+        hoverlabel=dict(
+            bgcolor=PANEL_ALT,
+            font_color=TEXT,
+            bordercolor=BORDER,
+            font_size=14
+        ),
+    )
+    return fig
+
+
+# -------------------- HERO HEADER --------------------
 
 st.markdown(
     """
@@ -564,21 +614,20 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# -------------------- MAIN DATA -----------------------------
-
 risk_df = build_dataframe()
 highest = risk_df.iloc[0]
 average_score = round(risk_df["Risk Score"].mean(), 1)
 critical_count = int((risk_df["Priority"] == "Critical").sum())
-high_count = int((risk_df["Priority"] == "High").sum())
 
-# -------------------- NAVIGATION ----------------------------
+# ============================================================
+# TABS
+# ============================================================
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "◈ Command Centre",
-    "⌁ Risk Simulator",
-    "✚ Response Planner",
-    "ⓘ Methodology & AI"
+    "◈  Command Centre",
+    "⌁  Risk Simulator",
+    "✚  Response Planner",
+    "ⓘ  Methodology & AI"
 ])
 
 # ============================================================
@@ -586,9 +635,9 @@ tab1, tab2, tab3, tab4 = st.tabs([
 # ============================================================
 
 with tab1:
-    st.subheader("Environmental Risk Overview")
+    st.header("Environmental Risk Overview")
     st.caption(
-        "Compare the model's current illustrative scores across six environmental zones."
+        "Compare the model's illustrative scores across six environmental zones."
     )
 
     c1, c2, c3, c4 = st.columns(4)
@@ -597,54 +646,38 @@ with tab1:
         metric_card("Zones analysed", "06", "Environmental locations")
 
     with c2:
-        metric_card(
-            "Highest score",
-            f"{highest['Risk Score']:.1f}",
-            str(highest["Zone"])
-        )
+        metric_card("Highest score", f"{highest['Risk Score']:.1f}",
+                    str(highest["Zone"]))
 
     with c3:
-        metric_card(
-            "Critical zones",
-            f"{critical_count:02d}",
-            "Score of 80 or above"
-        )
+        metric_card("Critical zones", f"{critical_count:02d}",
+                    "Score of 80 or above")
 
     with c4:
-        metric_card(
-            "Average score",
-            f"{average_score:.1f}",
-            "Across all six zones"
-        )
+        metric_card("Average score", f"{average_score:.1f}",
+                    "Across all six zones")
 
     st.write("")
-    left, right = st.columns([1.45, 1])
+    left, right = st.columns([1.4, 1])
 
     with left:
-        st.markdown("### Risk Priority Ranking")
+        st.subheader("Risk Priority Ranking")
         st.caption("Higher scores indicate higher model-assessed priority.")
 
         bar_colors = [
             priority_color(p) for p in risk_df["Priority"]
         ]
 
-        fig = go.Figure(
-            go.Bar(
-                x=risk_df["Risk Score"],
-                y=risk_df["Zone"],
-                orientation="h",
-                marker=dict(
-                    color=bar_colors,
-                    line=dict(color=BORDER, width=0.7)
-                ),
-                text=[f"{s:.1f}" for s in risk_df["Risk Score"]],
-                textposition="outside",
-                textfont=dict(color=TEXT, size=11),
-                hovertemplate=(
-                    "<b>%{y}</b><br>Risk score: %{x:.1f}<extra></extra>"
-                ),
-            )
-        )
+        fig = go.Figure(go.Bar(
+            x=risk_df["Risk Score"],
+            y=risk_df["Zone"],
+            orientation="h",
+            marker=dict(color=bar_colors, line=dict(color=BORDER, width=1)),
+            text=[f"{s:.1f}" for s in risk_df["Risk Score"]],
+            textposition="outside",
+            textfont=dict(color=TEXT, size=14),
+            hovertemplate="<b>%{y}</b><br>Score: %{x:.1f}<extra></extra>"
+        ))
 
         fig.update_yaxes(autorange="reversed")
         fig.update_xaxes(
@@ -652,11 +685,11 @@ with tab1:
             title="Weighted risk-priority score",
             dtick=20
         )
-        make_plot_layout(fig, 365)
+        make_plot_layout(fig, 420)
         st.plotly_chart(fig, use_container_width=True)
 
     with right:
-        st.markdown("### Priority Distribution")
+        st.subheader("Priority Distribution")
 
         counts = (
             risk_df["Priority"]
@@ -664,43 +697,39 @@ with tab1:
             .reindex(["Critical", "High", "Moderate", "Lower"], fill_value=0)
         )
 
-        pie_colors = [RED, AMBER, ACCENT, GREEN]
-
-        fig2 = go.Figure(
-            go.Pie(
-                labels=counts.index,
-                values=counts.values,
-                hole=0.67,
-                marker=dict(
-                    colors=pie_colors,
-                    line=dict(color=PANEL, width=3)
-                ),
-                textinfo="label+value",
-                textfont=dict(color=TEXT, size=11),
-                hovertemplate="%{label}: %{value} zone(s)<extra></extra>",
-            )
-        )
+        fig2 = go.Figure(go.Pie(
+            labels=counts.index,
+            values=counts.values,
+            hole=0.62,
+            marker=dict(
+                colors=[RED, AMBER, ACCENT, GREEN],
+                line=dict(color=PANEL, width=3)
+            ),
+            textinfo="label+value",
+            textfont=dict(color=TEXT, size=14),
+            hovertemplate="%{label}: %{value} zone(s)<extra></extra>"
+        ))
 
         fig2.update_layout(
             annotations=[dict(
                 text=f"{len(ZONES)}<br>Zones",
-                x=0.5,
-                y=0.5,
-                font=dict(size=20, color=TEXT, family="Manrope"),
+                x=0.5, y=0.5,
+                font=dict(size=25, color=TEXT, family="Manrope"),
                 showarrow=False
             )]
         )
-        make_plot_layout(fig2, 300)
+
+        make_plot_layout(fig2, 350)
         st.plotly_chart(fig2, use_container_width=True)
 
         st.markdown(
             f"""
             <div class="panel">
                 <div class="panel-title">Current model leader</div>
-                <div style="font-size:21px;font-weight:800;color:{TEXT};margin:8px 0;">
+                <div style="font-size:27px;font-weight:800;color:{TEXT};margin:10px 0;">
                     {highest['Zone']}
                 </div>
-                <div style="font-size:13px;color:{MUTED};margin-bottom:10px;">
+                <div style="font-size:19px;color:{MUTED};">
                     Score: {highest['Risk Score']:.1f} / 100
                 </div>
             </div>
@@ -708,27 +737,23 @@ with tab1:
             unsafe_allow_html=True
         )
 
-    st.markdown("### Zone Assessment Table")
-    st.caption("Rankings are recalculated from the model's weighted input values.")
+    st.subheader("Zone Assessment Table")
+    st.caption("Sorted from highest to lowest model score.")
 
     display_df = risk_df[
         ["Zone", "Risk Score", "Priority", "Hazard",
          "Vulnerability", "Population", "Exposure", "Urgency"]
     ].copy()
-
     display_df["Risk Score"] = display_df["Risk Score"].map(
         lambda x: f"{x:.1f}"
     )
-
-    # Static table gives us more reliable dark styling than the white canvas grid.
     st.table(display_df)
 
     with st.expander("How should these scores be interpreted?"):
         st.write(
-            "The scores are comparative priority indices generated from the "
-            "factor values and weights shown in this demonstration. They are "
-            "not probabilities of disasters, official alerts, or validated "
-            "real-world forecasts."
+            "These are comparative priority indices calculated from illustrative "
+            "factor values and weights. They are not disaster probabilities, "
+            "official alerts, or validated real-world forecasts."
         )
 
 # ============================================================
@@ -736,9 +761,9 @@ with tab1:
 # ============================================================
 
 with tab2:
-    st.subheader("Risk Scenario Simulator")
+    st.header("Risk Scenario Simulator")
     st.caption(
-        "Adjust the five factors to explore how changing conditions affect the model score."
+        "Change the factor values to explore how a different scenario affects the score."
     )
 
     selected_zone = st.selectbox(
@@ -749,8 +774,8 @@ with tab2:
 
     baseline = ZONES[selected_zone]
 
-    st.markdown("#### Adjust the scenario")
-    st.caption("Use the sliders to set each factor from 0 to 100.")
+    st.subheader("Adjust the scenario")
+    st.caption("Each factor can be set from 0 to 100.")
 
     left, right = st.columns(2)
     values = []
@@ -775,34 +800,24 @@ with tab2:
     difference = round(simulated_score - base_score, 1)
 
     st.write("")
-    res1, res2, res3 = st.columns(3)
+    r1, r2, r3 = st.columns(3)
 
-    with res1:
-        metric_card(
-            "Simulated score",
-            f"{simulated_score:.1f}",
-            "Out of 100"
-        )
+    with r1:
+        metric_card("Simulated score", f"{simulated_score:.1f}", "Out of 100")
 
-    with res2:
-        metric_card(
-            "Baseline score",
-            f"{base_score:.1f}",
-            "Original illustrative inputs"
-        )
+    with r2:
+        metric_card("Baseline score", f"{base_score:.1f}",
+                    "Original illustrative inputs")
 
-    with res3:
-        difference_text = f"{difference:+.1f}"
-        metric_card(
-            "Score change",
-            difference_text,
-            "Compared with baseline"
-        )
+    with r3:
+        metric_card("Score change", f"{difference:+.1f}",
+                    "Compared with baseline")
 
-    show_priority(simulated_priority)
     st.write("")
+    show_priority(simulated_priority)
 
-    st.markdown("### Factor Contributions")
+    st.subheader("Factor Contributions")
+
     contributions = [
         values[i] * WEIGHTS[FACTORS[i]] for i in range(len(FACTORS))
     ]
@@ -810,34 +825,25 @@ with tab2:
     contrib_df = pd.DataFrame({
         "Factor": FACTORS,
         "Weighted contribution": contributions,
-        "Weight (%)": [WEIGHTS[f] * 100 for f in FACTORS],
     }).sort_values("Weighted contribution", ascending=True)
 
-    fig3 = go.Figure(
-        go.Bar(
-            x=contrib_df["Weighted contribution"],
-            y=contrib_df["Factor"],
-            orientation="h",
-            marker=dict(
-                color=GREEN,
-                line=dict(color=BORDER, width=0.7)
-            ),
-            text=[
-                f"{v:.1f}" for v in contrib_df["Weighted contribution"]
-            ],
-            textposition="outside",
-            textfont=dict(color=TEXT, size=11),
-            hovertemplate=(
-                "<b>%{y}</b><br>Weighted contribution: %{x:.1f}<extra></extra>"
-            )
-        )
-    )
+    fig3 = go.Figure(go.Bar(
+        x=contrib_df["Weighted contribution"],
+        y=contrib_df["Factor"],
+        orientation="h",
+        marker=dict(color=GREEN, line=dict(color=BORDER, width=1)),
+        text=[f"{v:.1f}" for v in contrib_df["Weighted contribution"]],
+        textposition="outside",
+        textfont=dict(color=TEXT, size=14),
+        hovertemplate="<b>%{y}</b><br>Contribution: %{x:.1f}<extra></extra>"
+    ))
 
     fig3.update_xaxes(title="Contribution to total score", rangemode="tozero")
-    make_plot_layout(fig3, 300)
+    make_plot_layout(fig3, 360)
     st.plotly_chart(fig3, use_container_width=True)
 
-    st.markdown("### Factor Breakdown")
+    st.subheader("Factor Breakdown")
+
     breakdown = pd.DataFrame({
         "Factor": FACTORS,
         "Input value": values,
@@ -847,9 +853,8 @@ with tab2:
     st.table(breakdown)
 
     st.info(
-        "This simulator demonstrates how the chosen inputs affect a weighted "
-        "index. Changing a slider changes the scenario, not the real-world "
-        "conditions of the selected location."
+        "This is a model simulation. Changing a slider changes the calculated "
+        "scenario, not the actual environmental conditions of a location."
     )
 
 # ============================================================
@@ -857,9 +862,9 @@ with tab2:
 # ============================================================
 
 with tab3:
-    st.subheader("Environmental Response Planner")
+    st.header("Environmental Response Planner")
     st.caption(
-        "Use the model's priority classification to organise possible response actions."
+        "Explore possible response actions for each zone based on its model score."
     )
 
     selected_response_zone = st.selectbox(
@@ -868,31 +873,31 @@ with tab3:
         key="response_zone"
     )
 
-    response_values = ZONES[selected_response_zone]
-    response_score = calculate_risk(response_values)
+    response_score = calculate_risk(ZONES[selected_response_zone])
     response_priority = classify_risk(response_score)
 
-    col1, col2 = st.columns([1, 1.4])
+    col1, col2 = st.columns([1, 1.5])
 
     with col1:
         st.markdown(
             f"""
             <div class="panel">
                 <div class="eyebrow">Zone assessment</div>
-                <div style="font-size:23px;font-weight:800;color:{TEXT};margin:10px 0;">
+                <div style="font-size:29px;font-weight:800;color:{TEXT};margin:12px 0;">
                     {selected_response_zone}
                 </div>
-                <div style="font-size:35px;font-weight:800;color:{priority_color(response_priority)};">
-                    {response_score:.1f}<span style="font-size:13px;color:{MUTED};"> / 100</span>
+                <div style="font-size:43px;font-weight:800;color:{priority_color(response_priority)};">
+                    {response_score:.1f}
+                    <span style="font-size:17px;color:{MUTED};">/ 100</span>
                 </div>
-                <div style="margin-top:12px;">
+                <div style="margin-top:15px;">
                     <span class="priority-pill {priority_class(response_priority)}">
                         {response_priority.upper()} PRIORITY
                     </span>
                 </div>
-                <p class="panel-text" style="margin-top:14px;">
-                    The priority level is determined by the score thresholds
-                    defined in the TERA demonstration model.
+                <p class="panel-text" style="margin-top:18px;">
+                    Priority is determined by the score thresholds defined in
+                    the TERA demonstration model.
                 </p>
             </div>
             """,
@@ -900,16 +905,16 @@ with tab3:
         )
 
     with col2:
-        st.markdown("### Suggested response actions")
+        st.subheader("Suggested Response Actions")
 
         for index, action in enumerate(ACTIONS[selected_response_zone], start=1):
             st.markdown(
                 f"""
-                <div class="panel" style="padding:13px 15px;">
-                    <span style="color:{ACCENT};font-weight:800;margin-right:10px;">
+                <div class="panel">
+                    <span style="color:{ACCENT};font-weight:800;font-size:18px;margin-right:12px;">
                         {index:02d}
                     </span>
-                    <span style="color:{TEXT};font-size:13px;">
+                    <span style="color:{TEXT};font-size:17px;line-height:1.7;">
                         {action}
                     </span>
                 </div>
@@ -917,7 +922,7 @@ with tab3:
                 unsafe_allow_html=True
             )
 
-    st.markdown("### Response planning principles")
+    st.subheader("Response Planning Principles")
 
     p1, p2, p3 = st.columns(3)
 
@@ -941,8 +946,8 @@ with tab3:
             <div class="panel">
                 <div class="panel-title">02 · Prioritise</div>
                 <div class="panel-text">
-                    Use the score to support discussion about where limited
-                    response resources may be needed first.
+                    Use the score to support discussion about where response
+                    resources may be needed first.
                 </div>
             </div>
             """,
@@ -973,16 +978,14 @@ with tab3:
 # ============================================================
 
 with tab4:
-    st.subheader("Methodology & Model Transparency")
+    st.header("Methodology & Model Transparency")
     st.caption(
-        "A transparent weighted scoring method makes the demonstration easier to inspect and explain."
+        "Understand the calculation, factor weights, priority thresholds, and limitations."
     )
 
-    st.markdown("### Weighted risk-priority formula")
+    st.subheader("Weighted Risk-Priority Formula")
 
-    st.latex(
-        r"R = 0.30H + 0.25V + 0.20P + 0.15E + 0.10U"
-    )
+    st.latex(r"R = 0.30H + 0.25V + 0.20P + 0.15E + 0.10U")
 
     st.markdown(
         f"""
@@ -990,32 +993,32 @@ with tab4:
             <div class="panel-title">What the formula means</div>
             <div class="panel-text">
                 Each factor receives a score from 0 to 100. The model multiplies
-                each factor by its assigned weight and adds the contributions.
-                Hazard has the largest weight at 30%, while urgency contributes
-                10%. The final weighted score ranges from 0 to 100.
+                each value by its assigned weight and adds the contributions.
+                Hazard contributes 30%, while urgency contributes 10%.
+                The final weighted score ranges from 0 to 100.
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown("### Factor weights")
+    st.subheader("Factor Weights")
 
     weights_df = pd.DataFrame({
         "Factor": FACTORS,
         "Weight": [f"{WEIGHTS[f] * 100:.0f}%" for f in FACTORS],
         "Purpose": [
-            "Represents the assessed intensity of a hazard.",
-            "Represents how susceptible a zone may be to harm.",
-            "Represents the population-related dimension of the assessment.",
-            "Represents the assessed degree of exposure.",
-            "Represents the urgency assigned in the scenario.",
+            "Assessed intensity of a hazard.",
+            "Susceptibility of a zone to harm.",
+            "Population-related dimension of the assessment.",
+            "Assessed degree of exposure.",
+            "Urgency assigned in the scenario.",
         ]
     })
 
     st.table(weights_df)
 
-    st.markdown("### Priority thresholds")
+    st.subheader("Priority Thresholds")
 
     thresholds_df = pd.DataFrame({
         "Priority": ["Critical", "High", "Moderate", "Lower"],
@@ -1030,7 +1033,7 @@ with tab4:
 
     st.table(thresholds_df)
 
-    st.markdown("### Technology stack")
+    st.subheader("Technology Stack")
 
     tech1, tech2, tech3 = st.columns(3)
 
@@ -1053,7 +1056,7 @@ with tab4:
             <div class="panel">
                 <div class="panel-title">Pandas</div>
                 <div class="panel-text">
-                    Organises zone inputs, calculates rankings, and structures tabular data.
+                    Organises zone inputs, rankings, and tabular data.
                 </div>
             </div>
             """,
@@ -1066,14 +1069,14 @@ with tab4:
             <div class="panel">
                 <div class="panel-title">Streamlit + Plotly</div>
                 <div class="panel-text">
-                    Streamlit provides the interactive interface; Plotly visualises the results.
+                    Streamlit builds the interactive dashboard; Plotly creates the charts.
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    st.markdown("### Scientific limitations")
+    st.subheader("Scientific Limitations")
 
     st.markdown(
         f"""
@@ -1092,18 +1095,18 @@ with tab4:
                 not scientifically validated local measurements.
             </div>
             <br>
-            <div class="panel-title">How the model could be improved</div>
+            <div class="panel-title">Future improvements</div>
             <div class="panel-text">
-                Future versions could incorporate reliable official datasets,
-                expert-reviewed weights, measured local indicators, validation
-                against past events, and uncertainty analysis.
+                Future versions could incorporate official datasets, expert-reviewed
+                weights, measured local indicators, validation against past events,
+                and uncertainty analysis.
             </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-# -------------------- FOOTER --------------------------------
+# -------------------- FOOTER --------------------
 
 st.markdown(
     """
