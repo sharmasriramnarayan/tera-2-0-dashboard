@@ -7,6 +7,61 @@ from datetime import datetime
 from io import StringIO
 
 st.set_page_config(
+# TERA 2.0 — Midnight table styling
+st.markdown("""
+<style>
+/* Dark theme for interactive Streamlit dataframes */
+[data-testid="stDataFrame"] {
+    background-color: #0B1220 !important;
+    border: 1px solid #263B5A !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+/* Interactive dataframe colour variables */
+[data-testid="stDataFrame"] [data-testid="glideDataEditor"] {
+    --gdg-bg-cell: #0B1220;
+    --gdg-bg-cell-medium: #111C33;
+    --gdg-bg-header: #111C33;
+    --gdg-text-dark: #F1F5FF;
+    --gdg-text-medium: #B8C7E0;
+    --gdg-text-light: #8FA6C8;
+    --gdg-border-color: #263B5A;
+    --gdg-accent-color: #00D9FF;
+}
+
+/* Static tables */
+[data-testid="stTable"] table {
+    background-color: #0B1220 !important;
+    color: #F1F5FF !important;
+    border-collapse: collapse !important;
+    border: 1px solid #263B5A !important;
+}
+
+[data-testid="stTable"] thead tr th {
+    background-color: #111C33 !important;
+    color: #00D9FF !important;
+    border-bottom: 1px solid #00A9CC !important;
+}
+
+[data-testid="stTable"] tbody tr td {
+    background-color: #0B1220 !important;
+    color: #F1F5FF !important;
+    border-bottom: 1px solid #263B5A !important;
+}
+
+/* Subtle alternating rows */
+[data-testid="stTable"] tbody tr:nth-child(even) td {
+    background-color: #101A2D !important;
+}
+
+/* Hover highlight */
+[data-testid="stTable"] tbody tr:hover td {
+    background-color: #172943 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
     page_title="TERA 2.0 | Midnight Intelligence Edition",
     page_icon="🌍",
     layout="wide",
