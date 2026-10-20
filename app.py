@@ -5,18 +5,14 @@ st.set_page_config(
     page_title="TERA 2.0 | Environmental Intelligence",
     page_icon="🌍",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
 
-# ==========================================================
+# =========================================================
 # TERA 2.0 — MIDNIGHT INTELLIGENCE
-# Technology for Environmental Risk Analysis
-# Built with Streamlit only; no Plotly/Pandas dependency.
-# ==========================================================
+# =========================================================
 
 BG = "#07111F"
 PANEL = "#0D1B2A"
-PANEL2 = "#102437"
 BORDER = "#20384C"
 WHITE = "#F1F8FF"
 MUTED = "#91A8BC"
@@ -34,241 +30,17 @@ RISK_COLORS = {
     "LOWER": GREEN,
 }
 
-RISK_BG = {
-    "CRITICAL": "#321522",
-    "HIGH": "#342316",
-    "MODERATE": "#332C17",
-    "LOWER": "#10302A",
-}
-
-# -------------------- CINEMATIC DARK UI --------------------
-
-st.markdown(f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
-
-html, body, [class*="css"] {{
-    font-family: 'Inter', sans-serif;
-}}
-.stApp {{
-    background:
-        radial-gradient(ellipse at 85% 0%, rgba(20,105,130,.15), transparent 38%),
-        {BG};
-    color: {WHITE};
-}}
-[data-testid="stHeader"] {{
-    background: rgba(7,17,31,.93);
-}}
-[data-testid="stSidebar"] {{
-    background: #091523;
-    border-right: 1px solid {BORDER};
-}}
-[data-testid="stSidebar"] * {{
-    color: #DCEAF5;
-}}
-[data-testid="stSidebar"] hr {{
-    border-color: {BORDER};
-}}
-h1, h2, h3 {{
-    color: {WHITE} !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-    letter-spacing: -.5px;
-}}
-p, li, label {{
-    color: {MUTED};
-}}
-[data-testid="stMarkdownContainer"] p {{
-    line-height: 1.65;
-}}
-.hero {{
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(115deg, #0D1D2D 0%, #102D40 62%, #0B3A3A 100%);
-    border: 1px solid #245165;
-    border-radius: 22px;
-    padding: 32px;
-    margin-bottom: 22px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.20);
-}}
-.hero:after {{
-    content: "";
-    position: absolute;
-    width: 230px;
-    height: 230px;
-    right: -55px;
-    top: -80px;
-    border: 1px solid rgba(67,245,197,.18);
-    border-radius: 50%;
-    box-shadow: 0 0 0 24px rgba(67,245,197,.025),
-                0 0 0 52px rgba(67,245,197,.02);
-    pointer-events: none;
-}}
-.eyebrow {{
-    color: {CYAN};
-    font-size: 11px;
-    letter-spacing: 3px;
-    font-weight: 800;
-}}
-.hero-title {{
-    font-family: 'Space Grotesk', sans-serif;
-    color: #FFFFFF;
-    font-size: clamp(42px, 6vw, 67px);
-    font-weight: 700;
-    line-height: 1;
-    margin: 15px 0 12px 0;
-    letter-spacing: -2px;
-}}
-.hero-title span {{
-    color: {CYAN};
-}}
-.hero-copy {{
-    color: #B9CEDD;
-    font-size: 15px;
-    max-width: 690px;
-    line-height: 1.8;
-}}
-.hero-pill {{
-    display: inline-block;
-    border: 1px solid #28675E;
-    background: rgba(67,245,197,.08);
-    color: {CYAN};
-    padding: 7px 11px;
-    border-radius: 6px;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    font-weight: 800;
-    margin-top: 17px;
-}}
-.section-label {{
-    color: {CYAN};
-    font-size: 10px;
-    letter-spacing: 2.4px;
-    font-weight: 800;
-    margin-top: 12px;
-}}
-.metric {{
-    background: linear-gradient(145deg, {PANEL}, #0A1725);
-    border: 1px solid {BORDER};
-    border-radius: 14px;
-    padding: 19px;
-    min-height: 115px;
-    box-shadow: 0 5px 18px rgba(0,0,0,.12);
-}}
-.metric-label {{
-    font-size: 10px;
-    color: {MUTED};
-    font-weight: 800;
-    letter-spacing: 1.5px;
-}}
-.metric-value {{
-    color: {CYAN};
-    font-size: 32px;
-    font-weight: 800;
-    margin-top: 9px;
-    font-family: 'Space Grotesk', sans-serif;
-}}
-.panel {{
-    background: {PANEL};
-    border: 1px solid {BORDER};
-    border-radius: 15px;
-    padding: 21px;
-    margin: 8px 0 16px 0;
-}}
-.small-note {{
-    background: #102C32;
-    border: 1px solid #24584F;
-    border-left: 4px solid {CYAN};
-    padding: 13px 15px;
-    border-radius: 8px;
-    color: #C0DED9;
-    font-size: 12px;
-    line-height: 1.75;
-    margin: 12px 0;
-}}
-.risk-badge {{
-    display: inline-block;
-    padding: 6px 9px;
-    border-radius: 5px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}}
-div.stButton > button {{
-    background: {CYAN};
-    color: #041711;
-    border: 1px solid {CYAN};
-    border-radius: 8px;
-    min-height: 42px;
-    font-weight: 800;
-    transition: .18s ease;
-}}
-div.stButton > button:hover {{
-    background: #B1FFE8;
-    color: #041711;
-    border-color: #B1FFE8;
-}}
-[data-testid="stMetric"] {{
-    background: {PANEL};
-    border: 1px solid {BORDER};
-    border-radius: 12px;
-    padding: 15px;
-}}
-[data-testid="stMetricLabel"] {{
-    color: {MUTED};
-}}
-[data-testid="stMetricValue"] {{
-    color: {WHITE};
-    font-weight: 800;
-}}
-[data-testid="stMetricDelta"] {{
-    font-weight: 700;
-}}
-[data-baseweb="select"] > div,
-[data-baseweb="input"] > div {{
-    background: {PANEL2};
-    border-color: {BORDER};
-}}
-.stTabs [data-baseweb="tab-list"] {{
-    gap: 7px;
-    background: transparent;
-}}
-.stTabs [data-baseweb="tab"] {{
-    background: {PANEL};
-    border: 1px solid {BORDER};
-    border-radius: 7px;
-    padding: 9px 13px;
-}}
-.stTabs [aria-selected="true"] {{
-    color: {CYAN} !important;
-    border-bottom: 2px solid {CYAN} !important;
-}}
-hr {{
-    border-color: {BORDER};
-}}
-footer {{
-    visibility: hidden;
-}}
-#MainMenu {{
-    visibility: hidden;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-
-# -------------------- DATA + FORMULA --------------------
-
-FACTORS = [
-    "Hazard", "Vulnerability", "Population", "Exposure", "Urgency"
-]
+FACTORS = ["Hazard", "Vulnerability", "Population", "Exposure", "Urgency"]
 
 WEIGHTS = {
-    "Hazard": .30,
-    "Vulnerability": .25,
-    "Population": .20,
-    "Exposure": .15,
-    "Urgency": .10,
+    "Hazard": 0.30,
+    "Vulnerability": 0.25,
+    "Population": 0.20,
+    "Exposure": 0.15,
+    "Urgency": 0.10,
 }
 
+# Demonstration values only — not live measurements.
 ZONES = {
     "Forest": [72, 65, 35, 95, 75],
     "Residential Area": [80, 85, 95, 45, 90],
@@ -281,13 +53,13 @@ ZONES = {
 ACTIONS = {
     "Forest": [
         "Inspect firebreaks and forest access routes",
-        "Monitor dry vegetation and ignition sources",
-        "Review trained response teams and evacuation routes",
+        "Review dry vegetation and ignition precautions",
+        "Check response teams and evacuation routes",
     ],
     "Residential Area": [
         "Review evacuation routes and public alert procedures",
         "Check emergency access and vulnerable households",
-        "Review local response plans and public information",
+        "Review local preparedness plans",
     ],
     "Hospital": [
         "Verify backup power and emergency supplies",
@@ -297,30 +69,32 @@ ACTIONS = {
     "Smart Farm": [
         "Inspect irrigation and water-storage systems",
         "Review crop and weather-related vulnerabilities",
-        "Review water conservation and crop protection measures",
+        "Review water conservation measures",
     ],
     "River & Dam": [
-        "Review water-level monitoring and warning procedures",
+        "Review water-level monitoring procedures",
         "Check downstream communication and evacuation plans",
-        "Review drainage and emergency response arrangements",
+        "Review drainage and emergency arrangements",
     ],
     "Industrial Zone": [
-        "Review hazardous-material storage and safety procedures",
+        "Review hazardous-material storage procedures",
         "Check emergency shutdown and spill-response plans",
         "Review worker alerts and emergency access",
     ],
 }
 
 
-def score(values):
+def calculate_score(values):
     return round(
-        sum(values[i] * WEIGHTS[FACTORS[i]]
-            for i in range(len(FACTORS))),
+        sum(
+            values[i] * WEIGHTS[FACTORS[i]]
+            for i in range(len(FACTORS))
+        ),
         1,
     )
 
 
-def band(value):
+def classify_risk(value):
     if value >= 80:
         return "CRITICAL"
     if value >= 65:
@@ -332,44 +106,51 @@ def band(value):
 
 def risk_bar(label, value, color=CYAN):
     value = max(0, min(100, float(value)))
-    st.markdown(f"""
-    <div style="margin:13px 0">
-      <div style="display:flex;justify-content:space-between;
-                  align-items:center;gap:12px;margin-bottom:7px">
-        <span style="font-size:12px;font-weight:700;color:#D8E7F2">
-          {label}
-        </span>
-        <span style="font-family:'Space Grotesk',sans-serif;
-                     font-size:13px;font-weight:800;color:{color}">
-          {value:.1f}
-        </span>
-      </div>
-      <div style="height:7px;background:#203447;border-radius:12px;overflow:hidden">
-        <div style="height:7px;width:{value}%;background:{color};
-                    border-radius:12px"></div>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f"""
+        <div style="margin:13px 0">
+          <div style="display:flex;justify-content:space-between;
+                      margin-bottom:7px;gap:12px">
+            <span style="font-size:12px;font-weight:700;color:#D8E7F2">
+              {label}
+            </span>
+            <span style="font-weight:800;color:{color}">
+              {value:.1f}
+            </span>
+          </div>
+          <div style="height:7px;background:#203447;border-radius:12px;
+                      overflow:hidden">
+            <div style="height:7px;width:{value}%;background:{color};
+                        border-radius:12px"></div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
-def badge(level):
+def risk_badge(level):
     color = RISK_COLORS[level]
-    bg = {
+    backgrounds = {
         "CRITICAL": "#321522",
         "HIGH": "#342316",
         "MODERATE": "#332C17",
         "LOWER": "#10302A",
-    }[level]
+    }
+    background = backgrounds[level]
     st.markdown(
-        f'<span class="risk-badge" style="color:{color};'
-        f'background:{bg};border:1px solid {color}55">{level}</span>',
+        f'<span style="display:inline-block;padding:6px 9px;'
+        f'border-radius:5px;font-size:10px;font-weight:800;'
+        f'letter-spacing:1px;color:{color};background:{background};'
+        f'border:1px solid {color}55">{level}</span>',
         unsafe_allow_html=True,
     )
 
 
 def section(kicker, title, description=None):
     st.markdown(
-        f'<div class="section-label">{kicker}</div>',
+        f'<div style="color:{CYAN};font-size:10px;letter-spacing:2.4px;'
+        f'font-weight:800;margin-top:12px">{kicker}</div>',
         unsafe_allow_html=True,
     )
     st.subheader(title)
@@ -377,26 +158,186 @@ def section(kicker, title, description=None):
         st.caption(description)
 
 
+# -------------------- VISUAL DESIGN --------------------
+
+st.markdown(
+    f"""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+    html, body, [class*="css"] {{
+        font-family: 'Inter', sans-serif;
+    }}
+    .stApp {{
+        background:
+          radial-gradient(ellipse at 85% 0%,
+          rgba(20,105,130,.15), transparent 38%), {BG};
+        color: {WHITE};
+    }}
+    [data-testid="stHeader"] {{
+        background: rgba(7,17,31,.93);
+    }}
+    [data-testid="stSidebar"] {{
+        background: #091523;
+        border-right: 1px solid {BORDER};
+    }}
+    [data-testid="stSidebar"] * {{
+        color: #DCEAF5;
+    }}
+    h1, h2, h3 {{
+        color: {WHITE} !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+    }}
+    p, li, label {{
+        color: {MUTED};
+    }}
+    .hero {{
+        background: linear-gradient(115deg,
+          #0D1D2D 0%, #102D40 62%, #0B3A3A 100%);
+        border: 1px solid #245165;
+        border-radius: 22px;
+        padding: 32px;
+        margin-bottom: 22px;
+        position: relative;
+        overflow: hidden;
+    }}
+    .eyebrow {{
+        color: {CYAN};
+        font-size: 11px;
+        letter-spacing: 3px;
+        font-weight: 800;
+    }}
+    .hero-title {{
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(42px, 6vw, 67px);
+        font-weight: 700;
+        line-height: 1;
+        margin: 15px 0 12px;
+        color: white;
+    }}
+    .hero-title span {{
+        color: {CYAN};
+    }}
+    .hero-copy {{
+        color: #B9CEDD;
+        font-size: 15px;
+        line-height: 1.8;
+        max-width: 690px;
+    }}
+    .hero-pill {{
+        display: inline-block;
+        border: 1px solid #28675E;
+        background: rgba(67,245,197,.08);
+        color: {CYAN};
+        padding: 7px 11px;
+        border-radius: 6px;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        font-weight: 800;
+        margin-top: 17px;
+    }}
+    .metric-card {{
+        background: linear-gradient(145deg, {PANEL}, #0A1725);
+        border: 1px solid {BORDER};
+        border-radius: 14px;
+        padding: 19px;
+        min-height: 108px;
+    }}
+    .metric-label {{
+        font-size: 10px;
+        color: {MUTED};
+        font-weight: 800;
+        letter-spacing: 1.5px;
+    }}
+    .metric-value {{
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 32px;
+        font-weight: 800;
+        margin-top: 9px;
+    }}
+    .panel {{
+        background: {PANEL};
+        border: 1px solid {BORDER};
+        border-radius: 15px;
+        padding: 21px;
+        margin: 8px 0 16px;
+    }}
+    .note {{
+        background: #102C32;
+        border: 1px solid #24584F;
+        border-left: 4px solid {CYAN};
+        padding: 13px 15px;
+        border-radius: 8px;
+        color: #C0DED9;
+        font-size: 12px;
+        line-height: 1.75;
+        margin: 12px 0;
+    }}
+    div.stButton > button {{
+        background: {CYAN};
+        color: #041711;
+        border: 1px solid {CYAN};
+        border-radius: 8px;
+        min-height: 42px;
+        font-weight: 800;
+    }}
+    div.stButton > button:hover {{
+        background: #B1FFE8;
+        color: #041711;
+        border-color: #B1FFE8;
+    }}
+    [data-testid="stMetric"] {{
+        background: {PANEL};
+        border: 1px solid {BORDER};
+        border-radius: 12px;
+        padding: 15px;
+    }}
+    [data-testid="stMetricLabel"] {{
+        color: {MUTED};
+    }}
+    [data-testid="stMetricValue"] {{
+        color: {WHITE};
+        font-weight: 800;
+    }}
+    [data-baseweb="select"] > div,
+    [data-baseweb="input"] > div {{
+        background: #102437;
+        border-color: {BORDER};
+    }}
+    hr {{
+        border-color: {BORDER};
+    }}
+    footer, #MainMenu {{
+        visibility: hidden;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
 # -------------------- SIDEBAR --------------------
 
-st.sidebar.markdown(f"""
-<div style="padding:12px 3px 18px">
-  <div style="font-family:'Space Grotesk',sans-serif;font-size:27px;
-              font-weight:800;color:#FFFFFF">
-    TERA<span style="color:{CYAN}">.2</span>
-  </div>
-  <div style="font-size:10px;font-weight:800;letter-spacing:2px;
-              color:{CYAN};margin-top:4px">
-    MIDNIGHT INTELLIGENCE
-  </div>
-  <div style="font-size:11px;color:{MUTED};margin-top:9px">
-    ENVIRONMENTAL RISK SYSTEM
-  </div>
-</div>
-""", unsafe_allow_html=True)
+st.sidebar.markdown(
+    f"""
+    <div style="padding:12px 3px 18px">
+      <div style="font-family:'Space Grotesk',sans-serif;
+                  font-size:27px;font-weight:800;color:white">
+        TERA<span style="color:{CYAN}">.2</span>
+      </div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:2px;
+                  color:{CYAN};margin-top:4px">
+        MIDNIGHT INTELLIGENCE
+      </div>
+      <div style="font-size:11px;color:{MUTED};margin-top:9px">
+        ENVIRONMENTAL RISK SYSTEM
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.sidebar.markdown("---")
-
 page = st.sidebar.radio(
     "COMMAND NAVIGATION",
     [
@@ -406,61 +347,60 @@ page = st.sidebar.radio(
         "Methodology & AI",
     ],
 )
-
 st.sidebar.markdown("---")
 st.sidebar.markdown("### SYSTEM STATUS")
 st.sidebar.success("SCORING ENGINE READY")
 st.sidebar.caption("DEMONSTRATION DATASET")
 st.sidebar.caption("No live sensors connected")
 
-st.sidebar.markdown("---")
-st.sidebar.markdown(
-    f'<div style="font-size:10px;letter-spacing:1.5px;'
-    f'color:{MUTED}">TERA 2.0<br><br>'
-    f'TECHNOLOGY FOR ENVIRONMENTAL RISK ANALYSIS</div>',
-    unsafe_allow_html=True,
-)
 
-
-# -------------------- PRE-CALCULATE ZONES --------------------
+# -------------------- COMPUTE ALL ZONES --------------------
 
 results = []
-
 for zone, values in ZONES.items():
-    current_score = score(values)
+    zone_score = calculate_score(values)
     results.append({
         "Zone": zone,
-        "Score": current_score,
-        "Band": band(current_score),
+        "Score": zone_score,
+        "Band": classify_risk(zone_score),
         "Values": values,
     })
 
 results.sort(key=lambda item: item["Score"], reverse=True)
 
-critical_count = sum(r["Band"] == "CRITICAL" for r in results)
-high_count = sum(r["Band"] == "HIGH" for r in results)
-average_score = round(sum(r["Score"] for r in results) / len(results), 1)
+critical_count = sum(item["Band"] == "CRITICAL" for item in results)
+high_count = sum(item["Band"] == "HIGH" for item in results)
+average_score = round(
+    sum(item["Score"] for item in results) / len(results), 1
+)
 top = results[0]
 
 
-# -------------------- HERO --------------------
+# -------------------- HERO HEADER --------------------
 
-st.markdown(f"""
-<div class="hero">
-  <div class="eyebrow">ENVIRONMENTAL INTELLIGENCE / COMMAND INTERFACE</div>
-  <div class="hero-title">TERA<span> 2.0</span></div>
-  <div class="hero-copy">
-    The environment sends signals. TERA helps turn indicators into
-    priorities, and priorities into action.
-  </div>
-  <div class="hero-pill">● MIDNIGHT INTELLIGENCE SYSTEM &nbsp; / &nbsp; STUDENT PROTOTYPE</div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    f"""
+    <div class="hero">
+      <div class="eyebrow">
+        ENVIRONMENTAL INTELLIGENCE / COMMAND INTERFACE
+      </div>
+      <div class="hero-title">TERA<span> 2.0</span></div>
+      <div class="hero-copy">
+        The environment sends signals. TERA helps turn indicators into
+        priorities, and priorities into action.
+      </div>
+      <div class="hero-pill">
+        ● MIDNIGHT INTELLIGENCE / STUDENT PROTOTYPE
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 
-# ==========================================================
-# COMMAND CENTRE
-# ==========================================================
+# =========================================================
+# 1. COMMAND CENTRE
+# =========================================================
 
 if page == "Command Centre":
 
@@ -470,8 +410,7 @@ if page == "Command Centre":
         "A comparative overview of six demonstration zones.",
     )
 
-    c1, c2, c3, c4 = st.columns(4)
-
+    columns = st.columns(4)
     metrics = [
         ("ZONES ANALYSED", str(len(results)), CYAN),
         ("CRITICAL", str(critical_count), RED),
@@ -479,71 +418,81 @@ if page == "Command Centre":
         ("MEAN INDEX", str(average_score), BLUE),
     ]
 
-    for col, (label, value, color) in zip([c1, c2, c3, c4], metrics):
-        with col:
+    for column, (label, value, color) in zip(columns, metrics):
+        with column:
             st.markdown(
-                f'<div class="metric" style="border-top:3px solid {color}">'
-                f'<div class="metric-label">{label}</div>'
-                f'<div class="metric-value" style="color:{color}">{value}</div>'
-                f'</div>',
+                f"""
+                <div class="metric-card" style="border-top:3px solid {color}">
+                  <div class="metric-label">{label}</div>
+                  <div class="metric-value" style="color:{color}">
+                    {value}
+                  </div>
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
-    st.markdown("")
     section(
         "02 / PRIORITY ENGINE",
         "Zone Risk Ranking",
-        "Higher scores indicate higher relative priority within this model.",
+        "Higher scores mean higher relative priority within this model.",
     )
 
     for rank, item in enumerate(results, start=1):
         color = RISK_COLORS[item["Band"]]
-
         with st.container(border=True):
-            left, middle, right = st.columns([.7, 5, 1.4])
+            rank_col, zone_col, status_col = st.columns([0.7, 5, 1.4])
 
-            with left:
+            with rank_col:
                 st.markdown(
                     f"<div style='font-size:25px;font-weight:800;"
-                    f"color:{CYAN};padding-top:5px'>"
-                    f"{rank:02}</div>",
+                    f"color:{CYAN};padding-top:5px'>{rank:02}</div>",
                     unsafe_allow_html=True,
                 )
 
-            with middle:
+            with zone_col:
                 st.markdown(f"**{item['Zone']}**")
                 risk_bar("WEIGHTED PRIORITY INDEX", item["Score"], color)
 
-            with right:
+            with status_col:
                 st.markdown("<div style='height:10px'></div>",
                             unsafe_allow_html=True)
-                badge(item["Band"])
+                risk_badge(item["Band"])
                 st.caption(f"{item['Score']} / 100")
 
-    st.markdown("")
     section("03 / MODEL INSIGHT", "Priority Focus")
 
-    st.markdown(f"""
-    <div class="panel" style="border-left:4px solid {RISK_COLORS[top['Band']}">
-      <div style="font-size:10px;letter-spacing:2px;color:{CYAN};
-                  font-weight:800">HIGHEST MODEL SCORE</div>
-      <div style="font-size:29px;font-weight:800;color:{WHITE};
-                  margin:10px 0">{top['Zone']}</div>
-      <div style="font-size:25px;font-weight:800;
-                  color:{RISK_COLORS[top['Band']]}">
-        {top['Score']} <span style="font-size:13px;color:{MUTED}">
-        / 100 · {top['Band']}</span>
-      </div>
-      <div style="font-size:12px;color:{MUTED};margin-top:10px">
-        Suggested focus for review under the current model assumptions.
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
+    # The colour is calculated separately to avoid nested f-string lookups.
+    top_color = RISK_COLORS[top["Band"]]
+    top_zone = top["Zone"]
+    top_score = top["Score"]
+    top_band = top["Band"]
+
+    st.markdown(
+        f"""
+        <div class="panel" style="border-left:4px solid {top_color}">
+          <div style="font-size:10px;letter-spacing:2px;color:{CYAN};
+                      font-weight:800">HIGHEST MODEL SCORE</div>
+          <div style="font-size:29px;font-weight:800;color:{WHITE};
+                      margin:10px 0">{top_zone}</div>
+          <div style="font-size:25px;font-weight:800;color:{top_color}">
+            {top_score}
+            <span style="font-size:13px;color:{MUTED}">
+              / 100 · {top_band}
+            </span>
+          </div>
+          <div style="font-size:12px;color:{MUTED};margin-top:10px">
+            Suggested focus for review under the current model assumptions.
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     section("04 / DISTRIBUTION", "Priority Band Overview")
 
     counts = {
-        level: sum(r["Band"] == level for r in results)
+        level: sum(item["Band"] == level for item in results)
         for level in ["CRITICAL", "HIGH", "MODERATE", "LOWER"]
     }
 
@@ -554,88 +503,97 @@ if page == "Command Centre":
             RISK_COLORS[level],
         )
 
-    st.markdown(f"""
-    <div class="small-note">
-      <b>MODEL INTEGRITY NOTE</b><br>
-      These values are illustrative weighted priority indices, not actual
-      disaster probabilities, validated forecasts, or live measurements.
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="note">
+          <b>MODEL INTEGRITY NOTE</b><br>
+          These are illustrative weighted priority indices, not actual
+          disaster probabilities, validated forecasts, or live measurements.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
-# ==========================================================
-# RISK SIMULATOR
-# ==========================================================
+# =========================================================
+# 2. RISK SIMULATOR
+# =========================================================
 
 elif page == "Risk Simulator":
 
     section(
         "02 / INTERACTIVE LAB",
         "Risk Simulator",
-        "Change an indicator and immediately observe the model response.",
+        "Change an indicator and observe the model response.",
     )
 
-    st.markdown("""
-    <div class="small-note">
-      <b>SIMULATION MODE</b><br>
-      Experiment with the five factors. The weighted formula recalculates
-      the score as you adjust each slider.
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="note">
+          <b>SIMULATION MODE</b><br>
+          Adjust the five factors. The weighted formula recalculates the
+          score as you move each slider.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     selected_zone = st.selectbox("SELECT ZONE", list(ZONES.keys()))
     original = ZONES[selected_zone]
+    simulated = []
 
     left, right = st.columns(2)
-    values = []
 
-    for i, factor in enumerate(FACTORS):
-        target = left if i % 2 == 0 else right
+    for index, factor in enumerate(FACTORS):
+        target = left if index % 2 == 0 else right
 
         with target:
-            val = st.slider(
+            value = st.slider(
                 factor,
                 min_value=0,
                 max_value=100,
-                value=int(original[i]),
-                key=f"dark_sim_{selected_zone}_{factor}",
+                value=int(original[index]),
+                key=f"sim_{selected_zone}_{factor}",
             )
             st.caption(f"WEIGHT · {WEIGHTS[factor] * 100:.0f}%")
-            values.append(val)
+            simulated.append(value)
 
-    base_score = score(original)
-    new_score = score(values)
+    base_score = calculate_score(original)
+    new_score = calculate_score(simulated)
     delta = round(new_score - base_score, 1)
-    current_band = band(new_score)
-    color = RISK_COLORS[current_band]
+    new_band = classify_risk(new_score)
+    new_color = RISK_COLORS[new_band]
 
     st.markdown("---")
     section("SIMULATION OUTPUT", "Model Response")
 
-    a, b, c = st.columns(3)
-    a.metric("BASELINE INDEX", f"{base_score}/100")
-    b.metric("SIMULATED INDEX", f"{new_score}/100", delta=f"{delta:+.1f}")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("BASELINE INDEX", f"{base_score}/100")
+    c2.metric("SIMULATED INDEX", f"{new_score}/100", delta=f"{delta:+.1f}")
 
-    with c:
+    with c3:
         st.markdown(
-            f'<div class="metric" style="border-top:3px solid {color}">'
-            f'<div class="metric-label">PRIORITY BAND</div>'
-            f'<div class="metric-value" style="font-size:23px;color:{color}">'
-            f'{current_band}</div></div>',
+            f"""
+            <div class="metric-card" style="border-top:3px solid {new_color}">
+              <div class="metric-label">PRIORITY BAND</div>
+              <div class="metric-value" style="font-size:23px;color:{new_color}">
+                {new_band}
+              </div>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
     st.markdown("### Indicator Profile")
-
-    for i, factor in enumerate(FACTORS):
+    for index, factor in enumerate(FACTORS):
+        bar_color = CYAN if simulated[index] == original[index] else BLUE
         risk_bar(
             f"{factor.upper()} · {WEIGHTS[factor] * 100:.0f}% WEIGHT",
-            values[i],
-            CYAN if values[i] == original[i] else BLUE,
+            simulated[index],
+            bar_color,
         )
 
     st.markdown("### Interpretation")
-
     if new_score >= 80:
         st.error("CRITICAL BAND — review preparedness and mitigation priorities.")
     elif new_score >= 65:
@@ -643,7 +601,7 @@ elif page == "Risk Simulator":
     elif new_score >= 45:
         st.info("MODERATE PRIORITY — continue monitoring and preventive review.")
     else:
-        st.success("LOWER PRIORITY BAND — maintain appropriate routine preparedness.")
+        st.success("LOWER PRIORITY BAND — maintain routine preparedness.")
 
     st.caption(
         "This is a mathematical simulation using illustrative inputs. "
@@ -651,81 +609,90 @@ elif page == "Risk Simulator":
     )
 
 
-# ==========================================================
-# RESPONSE PLANNER
-# ==========================================================
+# =========================================================
+# 3. RESPONSE PLANNER
+# =========================================================
 
 elif page == "Response Planner":
 
     section(
         "03 / ACTION WORKSPACE",
         "Response Planning Desk",
-        "Organise possible preparedness actions for a selected zone.",
+        "Explore possible preparedness actions for a selected zone.",
     )
 
+    ranked_zones = [item["Zone"] for item in results]
     selected_zone = st.selectbox(
         "SELECT ZONE",
-        [item["Zone"] for item in results],
-        key="dark_planner_zone",
+        ranked_zones,
+        key="planner_zone",
     )
 
-    item = next(r for r in results if r["Zone"] == selected_zone)
-    color = RISK_COLORS[item["Band"]]
+    selected = next(
+        item for item in results if item["Zone"] == selected_zone
+    )
+    selected_color = RISK_COLORS[selected["Band"]]
 
-    st.markdown(f"""
-    <div class="panel" style="border-left:4px solid {color}">
-      <div class="section-label">SELECTED ZONE</div>
-      <div style="font-size:28px;font-weight:800;color:{WHITE};
-                  margin:10px 0">{selected_zone}</div>
-      <div style="font-size:23px;font-weight:800;color:{color}">
-        {item['Score']} / 100
-      </div>
-      <div style="font-size:11px;color:{MUTED};margin-top:5px">
-        MODEL BAND · {item['Band']}
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f"""
+        <div class="panel" style="border-left:4px solid {selected_color}">
+          <div style="color:{CYAN};font-size:10px;letter-spacing:2px">
+            SELECTED ZONE
+          </div>
+          <div style="font-size:28px;font-weight:800;color:{WHITE};
+                      margin:10px 0">{selected_zone}</div>
+          <div style="font-size:23px;font-weight:800;color:{selected_color}">
+            {selected["Score"]} / 100
+          </div>
+          <div style="font-size:11px;color:{MUTED};margin-top:5px">
+            MODEL BAND · {selected["Band"]}
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown("### Preparedness Checklist")
     st.caption(
-        "General review suggestions only; verify real-world actions with "
-        "the appropriate experts and authorities."
+        "These are general planning suggestions, not official emergency instructions."
     )
 
-    for i, action in enumerate(ACTIONS[selected_zone]):
-        st.checkbox(action, key=f"dark_action_{selected_zone}_{i}")
+    for index, action in enumerate(ACTIONS[selected_zone]):
+        st.checkbox(action, key=f"action_{selected_zone}_{index}")
 
     notes = st.text_area(
         "Planning notes",
         placeholder="Observations, responsible persons, next steps...",
         height=120,
-        key="dark_notes",
+        key="planner_notes",
     )
 
     if st.button("GENERATE PLANNING SUMMARY"):
         st.markdown("---")
         st.markdown("### Planning Summary")
         st.write(f"**Zone:** {selected_zone}")
-        st.write(f"**Model index:** {item['Score']}/100")
-        st.write(f"**Priority band:** {item['Band']}")
+        st.write(f"**Model index:** {selected['Score']}/100")
+        st.write(f"**Priority band:** {selected['Band']}")
 
-        for i, action in enumerate(ACTIONS[selected_zone]):
-            completed = st.session_state.get(
-                f"dark_action_{selected_zone}_{i}", False
+        for index, action in enumerate(ACTIONS[selected_zone]):
+            checked = st.session_state.get(
+                f"action_{selected_zone}_{index}", False
             )
-            st.write(
-                f"{'✓ REVIEWED' if completed else '○ PENDING'} — {action}"
-            )
+            status = "✓ REVIEWED" if checked else "○ PENDING"
+            st.write(f"{status} — {action}")
 
-        st.write("**Notes:**", notes if notes.strip() else "No notes entered.")
+        st.write(
+            "**Notes:**",
+            notes.strip() if notes.strip() else "No notes entered.",
+        )
         st.caption(
-            "Planning aid only. This is not an operational emergency response plan."
+            "Planning aid only; not an operational emergency response plan."
         )
 
 
-# ==========================================================
-# METHODOLOGY & AI
-# ==========================================================
+# =========================================================
+# 4. METHODOLOGY & AI
+# =========================================================
 
 elif page == "Methodology & AI":
 
@@ -735,20 +702,23 @@ elif page == "Methodology & AI":
         "The science behind the environmental priority index.",
     )
 
-    st.markdown("""
-    <div class="panel">
-      <div class="section-label">CORE MODEL</div>
-      <div style="font-size:13px;color:#91A8BC;margin:8px 0">
-        Weighted Environmental Priority Index
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.latex(
-        r"R = 0.30H + 0.25V + 0.20P + 0.15E + 0.10U"
+    st.markdown(
+        """
+        <div class="panel">
+          <div style="color:#43F5C5;font-size:10px;letter-spacing:2px">
+            CORE MODEL
+          </div>
+          <div style="font-size:13px;color:#91A8BC;margin:8px 0">
+            Weighted Environmental Priority Index
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    definitions = [
+    st.latex(r"R = 0.30H + 0.25V + 0.20P + 0.15E + 0.10U")
+
+    descriptions = [
         ("HAZARD", "30%", "Illustrative hazard-severity indicator."),
         ("VULNERABILITY", "25%", "Illustrative susceptibility to harm."),
         ("POPULATION", "20%", "Illustrative concentration of people potentially affected."),
@@ -758,60 +728,62 @@ elif page == "Methodology & AI":
 
     st.markdown("### Factor Weights")
 
-    for name, weight, description in definitions:
+    for name, weight, description in descriptions:
         with st.container(border=True):
-            left, middle, right = st.columns([2, 1, 5])
-
-            with left:
+            a, b, c = st.columns([2, 1, 5])
+            with a:
                 st.markdown(f"**{name}**")
-            with middle:
+            with b:
                 st.markdown(
                     f"<span style='color:{CYAN};font-weight:800'>{weight}</span>",
                     unsafe_allow_html=True,
                 )
-            with right:
+            with c:
                 st.caption(description)
 
     st.markdown("### Classification Thresholds")
 
-    for name, interval in [
+    for level, interval in [
         ("CRITICAL", "80–100"),
         ("HIGH", "65–79.9"),
         ("MODERATE", "45–64.9"),
         ("LOWER", "Below 45"),
     ]:
-        color = RISK_COLORS[name]
-        st.markdown(f"""
-        <div style="display:flex;justify-content:space-between;
-                    align-items:center;padding:12px 14px;margin:8px 0;
-                    background:{PANEL};border:1px solid {BORDER};
-                    border-left:4px solid {color};border-radius:8px">
-          <span style="font-size:12px;font-weight:800;color:{color}">
-            {name}
-          </span>
-          <span style="font-size:12px;font-weight:700;color:{WHITE}">
-            {interval}
-          </span>
-        </div>
-        """, unsafe_allow_html=True)
+        color = RISK_COLORS[level]
+        st.markdown(
+            f"""
+            <div style="display:flex;justify-content:space-between;
+                        align-items:center;padding:12px 14px;margin:8px 0;
+                        background:{PANEL};border:1px solid {BORDER};
+                        border-left:4px solid {color};border-radius:8px">
+              <span style="font-size:12px;font-weight:800;color:{color}">
+                {level}
+              </span>
+              <span style="font-size:12px;font-weight:700;color:{WHITE}">
+                {interval}
+              </span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.markdown("### How TERA Works")
 
     workflow = [
         ("01", "INPUT", "Supply illustrative indicators for each zone."),
         ("02", "CALCULATE", "Apply the transparent weighted formula."),
-        ("03", "CLASSIFY", "Assign the resulting score to a priority band."),
-        ("04", "PLAN", "Use suggested actions to structure a human review."),
+        ("03", "CLASSIFY", "Assign the score to a priority band."),
+        ("04", "PLAN", "Use suggestions to structure human review."),
         ("05", "VERIFY", "Validate data and decisions with domain experts."),
     ]
 
     for number, title, description in workflow:
         with st.container(border=True):
-            a, b = st.columns([.7, 5])
+            a, b = st.columns([0.7, 5])
             with a:
                 st.markdown(
-                    f"<span style='font-size:22px;font-weight:800;"
-                    f"color:{CYAN}'>{number}</span>",
+                    f"<span style='font-size:22px;font-weight:800;color:{CYAN}'>"
+                    f"{number}</span>",
                     unsafe_allow_html=True,
                 )
             with b:
@@ -819,7 +791,6 @@ elif page == "Methodology & AI":
                 st.caption(description)
 
     st.markdown("### Scientific Limitations")
-
     st.warning(
         "This prototype uses manually supplied illustrative data and a "
         "rule-based weighted formula. It does not currently train a machine "
@@ -833,19 +804,21 @@ elif page == "Methodology & AI":
 # -------------------- FOOTER --------------------
 
 st.markdown("---")
-
-st.markdown(f"""
-<div style="text-align:center;padding:20px 0 10px">
-  <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;
-              font-weight:800;color:{WHITE}">
-    TERA<span style="color:{CYAN}"> 2.0</span>
-  </div>
-  <div style="font-size:10px;letter-spacing:2px;font-weight:700;
-              color:{MUTED};margin-top:7px">
-    TECHNOLOGY FOR ENVIRONMENTAL RISK ANALYSIS
-  </div>
-  <div style="font-size:10px;color:{MUTED};margin-top:12px">
-    MIDNIGHT INTELLIGENCE · STUDENT PROTOTYPE
-  </div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    f"""
+    <div style="text-align:center;padding:20px 0 10px">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;
+                  font-weight:800;color:{WHITE}">
+        TERA<span style="color:{CYAN}"> 2.0</span>
+      </div>
+      <div style="font-size:10px;letter-spacing:2px;font-weight:700;
+                  color:{MUTED};margin-top:7px">
+        TECHNOLOGY FOR ENVIRONMENTAL RISK ANALYSIS
+      </div>
+      <div style="font-size:10px;color:{MUTED};margin-top:12px">
+        MIDNIGHT INTELLIGENCE · STUDENT PROTOTYPE
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
